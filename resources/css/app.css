@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --primary-50: #eff6ff;
+        --primary-500: #4f46e5;
+        --primary-600: #4338ca;
+        --secondary-500: #06b6d4;
+    }
+
+    body {
+        @apply font-sans antialiased;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        @apply bg-gray-100 rounded-full;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-gray-300 rounded-full hover:bg-gray-400;
+    }
+}
+
+@layer components {
+    .card-hover {
+        @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5;
+    }
+
+    .gradient-primary {
+        @apply bg-gradient-to-r from-primary-500 to-primary-600;
+    }
+
+    .gradient-secondary {
+        @apply bg-gradient-to-r from-secondary-500 to-secondary-600;
+    }
+
+    .btn-primary {
+        @apply gradient-primary text-white font-semibold py-2 px-4 rounded-lg hover:shadow-lg transition shadow-md;
+    }
+
+    .input-primary {
+        @apply border border-gray-300 rounded-lg focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition;
+    }
+}
+
+@layer utilities {
+    /* Animations */
+    @keyframes bounce-in {
+        0% { transform: scale(0.9); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    .animate-bounce-in {
+        animation: bounce-in 0.3s ease-out;
+    }
+
+    @keyframes pulse-gentle {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+
+    .animate-pulse-gentle {
+        animation: pulse-gentle 2s ease-in-out infinite;
+    }
+
+    /* Glassmorphism */
+    .glass {
+        @apply bg-white/80 backdrop-blur-md;
+    }
+
+    .glass-dark {
+        @apply bg-gray-900/80 backdrop-blur-md;
+    }
+
+    /* Hide scrollbar for Chrome/Safari */
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+    .container {
+        @apply px-4;
+    }
+}
+
+/* Print Styles */
+@media print {
+    nav, .no-print, #feedback-buttons, .action-buttons {
+        display: none !important;
+    }
+
+    body {
+        @apply bg-white;
+    }
+
+    .bg-white {
+        @apply shadow-none border-0;
+    }
+}
