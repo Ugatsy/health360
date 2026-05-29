@@ -42,7 +42,7 @@
                         <p style="font-size:12px; color:var(--muted); margin-top:2px;">{{ $patient->email }}</p>
                     </div>
                 </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:13px;">
+                            <div class="patient-details-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:13px;">
                     <div>
                         <span style="color:var(--muted);">Age</span>
                         <p style="font-weight:500; color:var(--ink); margin-top:2px;">{{ $patient->age ?? '—' }} years old</p>
@@ -52,7 +52,7 @@
                         <p style="font-weight:500; color:var(--ink); margin-top:2px;">{{ $patient->blood_type ?? '—' }}</p>
                     </div>
                     @if($patient->medicalProfile)
-                        <div style="grid-column:span 2;">
+                        <div class="patient-conditions" style="grid-column:span 2;">
                             <span style="color:var(--muted);">Pre-existing conditions</span>
                             <div style="margin-top:4px; display:flex; flex-wrap:wrap; gap:5px;">
                                 @foreach($patient->medicalProfile->getCriticalConditionsList() as $cond)
@@ -123,8 +123,8 @@
 
                     <div>
                         <label class="form-label">Review decision</label>
-                        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px;">
-                            @foreach(['approved' => ['icon' => 'fa-check', 'label' => 'Approve', 'color' => '#16a34a'], 'modified' => ['icon' => 'fa-pencil', 'label' => 'Modify', 'color' => '#2563eb'], 'rejected' => ['icon' => 'fa-xmark', 'label' => 'Reject', 'color' => 'var(--rose)'], 'flagged_for_human' => ['icon' => 'fa-flag', 'label' => 'Flag', 'color' => 'var(--amber)']] as $val => $cfg)
+                    <div class="review-decision-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px;">
+                        @foreach(['approved' => ['icon' => 'fa-check', 'label' => 'Approve', 'color' => '#16a34a'], 'modified' => ['icon' => 'fa-pencil', 'label' => 'Modify', 'color' => '#2563eb'], 'rejected' => ['icon' => 'fa-xmark', 'label' => 'Reject', 'color' => 'var(--rose)'], 'flagged_for_human' => ['icon' => 'fa-flag', 'label' => 'Flag', 'color' => 'var(--amber)']] as $val => $cfg)
                                 <label style="cursor:pointer;">
                                     <input type="radio" name="review_decision" value="{{ $val }}" style="display:none;" class="dec-radio">
                                     <div class="dec-opt" data-color="{{ $cfg['color'] }}"
@@ -217,6 +217,9 @@
 <style>
 @media (max-width: 860px) {
     .review-grid { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 640px) {
+    .review-decision-grid { grid-template-columns: repeat(2,1fr) !important; }
 }
 </style>
 

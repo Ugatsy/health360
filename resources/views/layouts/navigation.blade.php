@@ -100,7 +100,7 @@
         </div>
 
         {{-- Mobile menu --}}
-        <div x-show="mobileOpen" x-cloak style="padding-bottom:12px; display:flex; flex-direction:column; gap:2px;" class="md:hidden">
+        <div x-show="mobileOpen" x-cloak style="padding-bottom:12px; display:flex; flex-direction:column; gap:2px; max-height:70vh; overflow-y:auto;" class="md:hidden">
             @auth
             <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                 <i class="fas fa-grid-2 text-xs"></i> Dashboard

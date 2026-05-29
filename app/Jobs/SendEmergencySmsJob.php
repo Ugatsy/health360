@@ -41,6 +41,13 @@ class SendEmergencySmsJob implements ShouldQueue
             return;
         }
 
+        if ($alert->sms_sent_at) {
+            Log::info('SendEmergencySmsJob: Alert already processed, skipping', [
+                'alert_id' => $this->emergencyAlertId,
+            ]);
+            return;
+        }
+
         $contacts = $user->emergencyContacts;
 
         if ($contacts->isEmpty()) {
@@ -54,25 +61,34 @@ class SendEmergencySmsJob implements ShouldQueue
         $rateLimitPerMinute = config('sms.rate_limit_per_minute', 5);
         $cacheKey = self::RATE_LIMIT_CACHE_KEY . $this->userId;
 
+        $sentCount = (int) Cache::get($cacheKey, 0);
+        $availableSlots = $rateLimitPerMinute - $sentCount;
+
+        if ($availableSlots <= 0) {
+            Log::warning('SendEmergencySmsJob: Rate limit exhausted, releasing', [
+                'user_id' => $this->userId,
+                'alert_id' => $this->emergencyAlertId,
+                'sent_in_window' => $sentCount,
+            ]);
+            $this->release(self::RATE_LIMIT_WINDOW);
+            return;
+        }
+
         $smsService = app(SMSService::class);
         $successCount = 0;
         $failCount = 0;
         $errors = [];
 
         foreach ($contacts as $contact) {
-            $sentCount = (int) Cache::get($cacheKey, 0);
-            if ($sentCount >= $rateLimitPerMinute) {
-                Log::warning('SendEmergencySmsJob: Rate limit hit', [
+            if ($successCount + $failCount >= $availableSlots) {
+                Log::warning('SendEmergencySmsJob: Rate limit would be exceeded, stopping', [
                     'user_id' => $this->userId,
                     'alert_id' => $this->emergencyAlertId,
                     'sent_in_window' => $sentCount,
+                    'attempted' => $successCount + $failCount,
                 ]);
-                $alert->update([
-                    'sms_delivery_status' => 'pending',
-                    'sms_error_message' => 'Rate limit reached. SMS will be retried on next attempt.',
-                ]);
-                $this->release(self::RATE_LIMIT_WINDOW);
-                return;
+                $errors[] = 'Rate limit reached, remaining contacts deferred';
+                break;
             }
 
             $count = Cache::increment($cacheKey);

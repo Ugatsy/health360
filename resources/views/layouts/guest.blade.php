@@ -64,20 +64,24 @@
             border-radius: var(--radius); padding: 36px;
             box-shadow: 0 1px 3px rgba(0,0,0,.04), 0 10px 30px -10px rgba(0,0,0,.08);
         }
+        @media (max-width: 480px) {
+            .form-box { padding: 24px 20px; }
+            .form-panel { padding: 24px 16px; }
+        }
         .form-row { margin-bottom: 18px; }
         .form-row:last-child { margin-bottom: 0; }
 
+        @media (min-width: 769px) {
+            .brand-panel { display: flex !important; }
+        }
         @media (max-width: 768px) {
-            .brand-panel { display: none; }
+            .brand-panel { display: none !important; }
         }
     </style>
 </head>
 <body>
-    {{-- Brand panel (hidden on mobile) --}}
-    <div class="brand-panel" style="display:none;" class="hidden lg:flex flex-col">
-        @include('layouts.guest-brand')
-    </div>
-    <div class="brand-panel hidden lg:flex lg:flex-col">
+    {{-- Brand panel (hidden on mobile via CSS) --}}
+    <div class="brand-panel">
         @include('layouts.guest-brand')
     </div>
 

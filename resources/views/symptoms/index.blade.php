@@ -8,7 +8,7 @@
 <div class="max-w-6xl mx-auto px-4 sm:px-6">
 
     {{-- Stepper --}}
-    <div style="display:flex; align-items:center; gap:6px; margin-bottom:24px;">
+    <div class="symptom-stepper" style="display:flex; align-items:center; gap:6px; margin-bottom:24px;">
         @php
             $stepNumbers = ['1', '2', '3'];
             $stepLabels = ['Locate', 'Describe', 'Review'];
@@ -103,6 +103,11 @@
                 @media (max-width: 860px) {
                     .symptom-grid { grid-template-columns: 1fr !important; }
                 }
+                @media (max-width: 480px) {
+                    .symptom-stepper { font-size: 12px; gap: 4px !important; flex-wrap: wrap; justify-content: center; }
+                    .symptom-stepper > div { margin-bottom: 4px; }
+                    .duration-grid { grid-template-columns: 1fr 1fr !important; }
+                }
                 input[type="radio"].peer:checked + .duration-opt {
                     background: var(--teal-light); border-color: var(--teal); color: var(--teal-dark); font-weight: 500;
                 }
@@ -153,7 +158,7 @@
 
                 <div>
                     <label class="form-label">Duration</label>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                    <div class="duration-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
                         @foreach(['< 1 hour' => 'lt_1hr', 'Today' => 'today', 'Few days' => 'few_days', 'Over a week' => 'week_plus'] as $label => $val)
                             <label style="cursor:pointer;">
                                 <input type="radio" name="duration" value="{{ $val }}" class="peer" style="display:none;" {{ old('duration') === $val ? 'checked' : '' }}>
@@ -236,6 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Form validation - prevent submission if no body region selected
     if (form) {
+        const submitBtn = form.querySelector('button[type="submit"]');
         form.addEventListener('submit', (e) => {
             if (!isRegionSelected && !input.value) {
                 e.preventDefault();
@@ -245,6 +251,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 display.style.color = 'var(--rose)';
                 display.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return false;
+            }
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing…';
             }
         });
     }

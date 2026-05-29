@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <div style="display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid var(--border);">
+        <div class="risk-meta-grid" style="display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid var(--border);">
             @foreach([
                 ['Body Region', $symptomEntry->bodyRegion->name ?? '—'],
                 ['Pain Level', ($symptomEntry->pain_intensity ?? '—') . '/10'],
@@ -217,6 +217,11 @@
 <style>
 @media (max-width: 860px) {
     .results-grid { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 640px) {
+    .risk-meta-grid { grid-template-columns: repeat(2,1fr) !important; }
+    .risk-meta-grid > div:nth-child(2) { border-right: none !important; }
+    .risk-meta-grid > div { padding: 10px 8px !important; }
 }
 </style>
 @endsection

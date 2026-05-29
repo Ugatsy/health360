@@ -20,7 +20,7 @@
 <div class="max-w-6xl mx-auto px-4 sm:px-6 space-y-6">
 
     {{-- Welcome banner --}}
-    <div class="card shadow fade-up" style="padding:24px 28px; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px;">
+    <div class="card shadow fade-up welcome-banner" style="padding:24px 28px; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px;">
         <div>
             <p style="font-size:12px; color:var(--teal); font-weight:600; text-transform:uppercase; letter-spacing:.05em; margin-bottom:4px;">
                 <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--teal); margin-right:5px;"></span>
@@ -192,7 +192,7 @@
             {{-- Quick actions --}}
             <div class="card shadow" style="padding:18px;">
                 <h3 style="font-size:14px; font-weight:600; color:var(--ink); margin-bottom:12px;">Quick actions</h3>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                <div class="quick-actions-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
                     @auth
                     <a href="{{ route('symptoms.index') }}" style="display:flex; flex-direction:column; align-items:flex-start; gap:8px; padding:12px; border-radius:9px; background:var(--surface); border:1px solid var(--border); transition:background .12s;"
                        onmouseover="this.style.background='var(--teal-light)'" onmouseout="this.style.background='var(--surface)'">
@@ -264,6 +264,12 @@
 <style>
 @media (max-width: 900px) {
     .lg-grid { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 480px) {
+    .stat-card { padding: 14px; }
+    .quick-actions-grid { grid-template-columns: 1fr 1fr !important; }
+    .welcome-banner { padding: 16px !important; }
+    .welcome-banner h2 { font-size: 18px !important; }
 }
 </style>
 @endsection

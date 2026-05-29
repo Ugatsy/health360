@@ -19,7 +19,7 @@
             @error('email') <p class="error-msg">{{ $message }}</p> @enderror
         </div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px;">
+            <div class="register-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px;">
             <div>
                 <label for="date_of_birth" class="form-label">Date of birth</label>
                 <input id="date_of_birth" type="date" name="date_of_birth" value="{{ old('date_of_birth') }}"
@@ -54,6 +54,36 @@
             <label for="password_confirmation" class="form-label">Confirm password</label>
             <input id="password_confirmation" type="password" name="password_confirmation" required
                    class="form-input" placeholder="Repeat password">
+        </div>
+
+        {{-- Emergency contact --}}
+        <div style="background:#fff8f8; border:1px solid #fecaca; border-radius:var(--radius-sm); padding:14px 16px; margin-bottom:18px;">
+            <p style="font-size:12px; font-weight:600; color:#7f1d1d; margin-bottom:10px; text-transform:uppercase; letter-spacing:.04em;">
+                <i class="fas fa-phone"></i> Emergency contact <span style="color:var(--rose);">*</span>
+            </p>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:8px;" class="register-grid">
+                <div>
+                    <label for="emergency_contact_name" class="form-label">Full name</label>
+                    <input id="emergency_contact_name" type="text" name="emergency_contact_name"
+                           value="{{ old('emergency_contact_name') }}" required
+                           class="form-input" placeholder="Contact person">
+                    @error('emergency_contact_name') <p class="error-msg">{{ $message }}</p> @enderror
+                </div>
+                <div>
+                    <label for="emergency_contact_phone" class="form-label">Phone number</label>
+                    <input id="emergency_contact_phone" type="tel" name="emergency_contact_phone"
+                           value="{{ old('emergency_contact_phone') }}" required
+                           class="form-input" placeholder="+63 912 345 6789">
+                    @error('emergency_contact_phone') <p class="error-msg">{{ $message }}</p> @enderror
+                </div>
+            </div>
+            <div>
+                <label for="emergency_contact_relationship" class="form-label">Relationship <span style="font-weight:400; color:#94a3b8;">(optional)</span></label>
+                <input id="emergency_contact_relationship" type="text" name="emergency_contact_relationship"
+                       value="{{ old('emergency_contact_relationship') }}"
+                       class="form-input" placeholder="e.g. Spouse, Parent, Sibling">
+                @error('emergency_contact_relationship') <p class="error-msg">{{ $message }}</p> @enderror
+            </div>
         </div>
 
         {{-- Consent checkboxes --}}

@@ -5,7 +5,7 @@
                 <div style="width:24px; height:24px; background:var(--teal); border-radius:6px; display:flex; align-items:center; justify-content:center;">
                     <i class="fas fa-heart-pulse" style="color:#fff; font-size:10px;"></i>
                 </div>
-                &copy; {{ date('Y') }} Health360 — AI-assisted, physician-reviewed.
+                <span>&copy; {{ date('Y') }} Health360 — AI-assisted, physician-reviewed.</span>
             </div>
 
             <div style="display:flex; align-items:center; gap:20px; font-size:13px; color:var(--muted);">

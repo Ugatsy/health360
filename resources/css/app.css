@@ -98,6 +98,31 @@
     }
 }
 
+/* Hide on extra small screens (below 480px) */
+@media (max-width: 479px) {
+    .hidden-xs { display: none !important; }
+}
+
+/* Responsive table-like layouts for mobile */
+@media (max-width: 640px) {
+    .register-grid { grid-template-columns: 1fr !important; }
+    .patient-details-grid { grid-template-columns: 1fr !important; }
+    .patient-conditions { grid-column: span 1 !important; }
+}
+
+/* Ensure form inputs don't overflow on small screens */
+input, select, textarea, button {
+    max-width: 100%;
+}
+
+/* Improve touch targets on mobile */
+@media (pointer: coarse) {
+    .btn, .nav-link, button, a {
+        min-height: 44px;
+    }
+    .btn-sm { min-height: 36px; }
+}
+
 /* Print Styles */
 @media print {
     nav, .no-print, #feedback-buttons, .action-buttons {

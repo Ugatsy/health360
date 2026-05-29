@@ -23,9 +23,27 @@ class SendEmergencyNotifications
             return;
         }
 
+        $sessionId = $event->symptomEntry?->session_id;
+
+        if ($sessionId) {
+            $existing = EmergencyAlert::where('user_id', $event->user->id)
+                ->where('symptom_session_id', $sessionId)
+                ->where('action_taken', 'sent_sms_alert')
+                ->where('created_at', '>=', now()->subMinutes(5))
+                ->first();
+
+            if ($existing) {
+                Log::info('Duplicate emergency alert suppressed for session', [
+                    'user_id' => $event->user->id,
+                    'session_id' => $sessionId,
+                ]);
+                return;
+            }
+        }
+
         $alert = EmergencyAlert::create([
             'user_id' => $event->user->id,
-            'symptom_session_id' => $event->symptomEntry?->session_id,
+            'symptom_session_id' => $sessionId,
             'trigger_keyword' => 'ai_detected_' . $event->riskLevel,
             'user_symptom_text' => $event->symptomText,
             'action_taken' => 'sent_sms_alert',

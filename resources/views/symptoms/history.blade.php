@@ -21,14 +21,14 @@
                    style="width:100%; padding:8px 12px 8px 32px; border:1px solid var(--border); border-radius:8px; font-size:13px; font-family:inherit; color:var(--ink); background:#fff;"
                    id="search-input">
         </div>
-        <select style="padding:8px 32px 8px 12px; border:1px solid var(--border); border-radius:8px; font-size:13px; font-family:inherit; color:var(--ink); background:#fff url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%2364748b' d='M8 11L3 6h10z'/%3E%3C/svg%3E\") no-repeat right 8px center / 14px; appearance:none;" id="risk-filter">
+        <select style="padding:8px 32px 8px 12px; border:1px solid var(--border); border-radius:8px; font-size:13px; font-family:inherit; color:var(--ink); background:#fff url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%2364748b' d='M8 11L3 6h10z'/%3E%3C/svg%3E&quot;) no-repeat right 8px center / 14px; appearance:none;" id="risk-filter">
             <option value="">All risk levels</option>
             <option value="emergency">Emergency</option>
             <option value="high">High</option>
             <option value="medium">Medium</option>
             <option value="low">Low</option>
         </select>
-        <select style="padding:8px 32px 8px 12px; border:1px solid var(--border); border-radius:8px; font-size:13px; font-family:inherit; color:var(--ink); background:#fff url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%2364748b' d='M8 11L3 6h10z'/%3E%3C/svg%3E\") no-repeat right 8px center / 14px; appearance:none;">
+        <select style="padding:8px 32px 8px 12px; border:1px solid var(--border); border-radius:8px; font-size:13px; font-family:inherit; color:var(--ink); background:#fff url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%2364748b' d='M8 11L3 6h10z'/%3E%3C/svg%3E&quot;) no-repeat right 8px center / 14px; appearance:none;">
             <option>All time</option>
             <option>This week</option>
             <option>This month</option>
@@ -51,20 +51,20 @@
                     </div>
                     <div style="min-width:0;">
                         <p style="font-size:14px; font-weight:500; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                            <strong>{{ $session->bodyRegion->name ?? 'Unknown' }}</strong> — {{ Str::limit($session->description ?? '', 70) }}
+                            <strong>{{ $session->bodyRegion->name ?? 'Unknown' }}</strong> — {{ Str::limit($session->description ?? '', 50) }}
                         </p>
                         <p style="font-size:12px; color:var(--muted); margin-top:2px;">
                             {{ $session->created_at->format('M j, Y') }} · {{ $session->created_at->diffForHumans() }} · Pain {{ $session->pain_intensity ?? '—' }}/10
                         </p>
                     </div>
                 </div>
-                <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+                <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
                     <span class="chip risk-{{ $risk }}" style="font-size:11px;">
                         <span style="width:5px; height:5px; border-radius:50%; background:currentColor; display:inline-block;"></span>
                         {{ $riskLabel[$risk] ?? ucfirst($risk) }}
                     </span>
-                    <a href="{{ route('symptoms.results', $session) }}" class="btn btn-outline btn-sm">
-                        <i class="fas fa-eye"></i> View
+                    <a href="{{ route('symptoms.results', $session) }}" class="btn btn-outline btn-sm" style="display:inline-flex; align-items:center; gap:5px;">
+                        <i class="fas fa-eye"></i> <span class="hidden-xs">View</span>
                     </a>
                 </div>
             </div>

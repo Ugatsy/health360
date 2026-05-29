@@ -58,18 +58,18 @@
 
     {{-- Pending list --}}
     <section class="h360-card h360-shadow overflow-hidden">
-        <div class="px-6 py-4 border-b border-[var(--h360-border)] flex items-center justify-between flex-wrap gap-3">
+        <div class="px-4 sm:px-6 py-4 border-b border-[var(--h360-border)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div>
                 <h3 class="font-semibold text-slate-900">Pending AI response reviews</h3>
                 <p class="text-xs text-slate-500 mt-0.5">Validate or correct AI-generated assessments</p>
             </div>
-            <div class="flex items-center gap-2">
-                <div class="relative">
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+                <div class="relative flex-1 sm:flex-none">
                     <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                    <input type="text" placeholder="Search patient or symptom…"
-                           class="pl-8 pr-3 py-2 rounded-lg border border-[var(--h360-border)] text-sm h360-ring-focus bg-white">
+                    <input type="text" placeholder="Search…"
+                           class="w-full sm:w-48 pl-8 pr-3 py-2 rounded-lg border border-[var(--h360-border)] text-sm h360-ring-focus bg-white">
                 </div>
-                <select class="px-3 py-2 rounded-lg border border-[var(--h360-border)] text-sm bg-white">
+                <select class="px-3 py-2 rounded-lg border border-[var(--h360-border)] text-sm bg-white w-full sm:w-auto">
                     <option>All risk levels</option>
                     <option>Emergency</option>
                     <option>High</option>
@@ -91,16 +91,16 @@
                     ];
                     $rc = $riskMap[$risk] ?? $riskMap['low'];
                 @endphp
-                <div class="p-5 hover:bg-slate-50/70 transition">
-                    <div class="flex flex-wrap items-start justify-between gap-4">
-                        <div class="flex items-start gap-4 min-w-0 flex-1">
-                            <div class="w-11 h-11 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 text-slate-700 flex items-center justify-center font-semibold shrink-0">
+                <div class="p-4 sm:p-5 hover:bg-slate-50/70 transition">
+                    <div class="flex flex-wrap items-start justify-between gap-3 sm:gap-4">
+                        <div class="flex items-start gap-3 sm:gap-4 min-w-0 flex-1">
+                            <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 text-slate-700 flex items-center justify-center font-semibold shrink-0">
                                 {{ strtoupper(substr($review->symptomEntry->user->name ?? 'P', 0, 1)) }}
                             </div>
-                            <div class="min-w-0">
-                                <div class="flex items-center flex-wrap gap-2">
-                                    <span class="font-semibold text-slate-900">{{ $review->symptomEntry->user->name }}</span>
-                                    <span class="h360-chip {{ $rc['bg'] }} {{ $rc['text'] }}">
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center flex-wrap gap-1.5 sm:gap-2">
+                                    <span class="font-semibold text-slate-900 text-sm sm:text-base">{{ $review->symptomEntry->user->name }}</span>
+                                    <span class="h360-chip {{ $rc['bg'] }} {{ $rc['text'] }} text-xs">
                                         <span class="w-1.5 h-1.5 rounded-full {{ $rc['dot'] }}"></span>
                                         {{ ucfirst($risk) }}
                                     </span>
@@ -109,17 +109,17 @@
                                 <p class="mt-1 text-sm text-slate-700">
                                     <i class="fas fa-location-dot text-slate-400 mr-1 text-xs"></i>
                                     <strong>{{ $review->symptomEntry->bodyRegion->name }}</strong> —
-                                    {{ Str::limit($review->symptomEntry->description, 140) }}
+                                    {{ Str::limit($review->symptomEntry->description, 100) }}
                                 </p>
-                                <p class="mt-2 text-xs text-slate-500 bg-slate-50 rounded-lg px-3 py-2 border border-[var(--h360-border)]">
+                                <p class="mt-2 text-xs text-slate-500 bg-slate-50 rounded-lg px-2 sm:px-3 py-2 border border-[var(--h360-border)]">
                                     <i class="fas fa-brain text-[var(--h360-primary)] mr-1"></i>
-                                    <strong>AI:</strong> {{ Str::limit($review->ai_summary, 180) }}
+                                    <strong>AI:</strong> {{ Str::limit($review->ai_summary, 120) }}
                                 </p>
                             </div>
                         </div>
                         <div class="flex items-center gap-2 shrink-0">
                             <a href="{{ route('doctor.review', $review) }}" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg h360-btn-primary text-sm font-medium">
-                                <i class="fas fa-eye"></i> Review
+                                <i class="fas fa-eye"></i> <span class="hidden-xs">Review</span>
                             </a>
                             <button class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-[var(--h360-border)] hover:bg-slate-50 text-sm">
                                 <i class="fas fa-ellipsis"></i>
