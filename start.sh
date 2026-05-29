@@ -20,9 +20,6 @@ until pg_isready -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" 2>/dev/null; do
     COUNT=$((COUNT+1))
     if [ $COUNT -ge $MAX_RETRIES ]; then
         echo "❌ Supabase connection failed after $MAX_RETRIES attempts"
-        echo "DB_HOST: $DB_HOST"
-        echo "DB_PORT: $DB_PORT"
-        echo "DB_USERNAME: $DB_USERNAME"
         exit 1
     fi
     echo "⏳ Waiting for Supabase... ($COUNT/$MAX_RETRIES)"
@@ -31,10 +28,8 @@ done
 
 echo "✅ Supabase is ready!"
 
-# Generate .env file if not exists
-if [ ! -f "/var/www/html/.env" ]; then
-    echo "Creating .env file..."
-    cat > /var/www/html/.env << EOF
+# Generate .env file
+cat > /var/www/html/.env << EOF
 APP_NAME=Health360
 APP_ENV=${APP_ENV:-production}
 APP_DEBUG=${APP_DEBUG:-false}
@@ -64,30 +59,33 @@ LOG_CHANNEL=stderr
 SESSION_DRIVER=file
 CACHE_STORE=file
 QUEUE_CONNECTION=database
-EOF
-fi
 
-# Generate app key if not set in .env
+# Force HTTPS in production
+URL_FORCE_HTTPS=true
+SESSION_SECURE_COOKIE=true
+EOF
+
+# Generate app key if not set
 if ! grep -q "APP_KEY=base64:" /var/www/html/.env; then
     echo "Generating application key..."
     php artisan key:generate --force
 fi
 
-# Run Laravel setup
+# Clear all caches
+echo "Clearing caches..."
+php artisan optimize:clear
+
+# Run migrations
 echo "Running migrations..."
 php artisan migrate --force
 
-echo "Caching config..."
-php artisan config:cache
-
-echo "Caching routes..."
-php artisan route:cache
-
-echo "Caching views..."
-php artisan view:cache
-
+# Create storage link
 echo "Creating storage link..."
-php artisan storage:link --force
+php artisan storage:link --force || true
+
+# Optimize for production
+echo "Optimizing application..."
+php artisan optimize
 
 echo "Starting PHP-FPM..."
 php-fpm -D
