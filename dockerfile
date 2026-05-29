@@ -41,6 +41,15 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
 # Set working directory
 WORKDIR /var/www/html
 
+# -------------------------------------------------------
+# FIX: Copy package files first and install node modules
+# BEFORE copying the full app. This ensures node_modules
+# is present when npm run build executes, and Docker layer
+# caching speeds up rebuilds when only PHP files change.
+# -------------------------------------------------------
+COPY package.json package-lock.json* ./
+RUN npm ci
+
 # Copy application files
 COPY . .
 
@@ -55,8 +64,23 @@ RUN chmod +x /start.sh
 # Install PHP dependencies
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 
-# Install NPM dependencies and build assets
-RUN npm install && npm run build
+# -------------------------------------------------------
+# FIX: Build Vite assets AFTER copying all app files so
+# resources/css and resources/js are available.
+# The built output lands in public/build/manifest.json
+# which must exist inside the image before runtime.
+# -------------------------------------------------------
+RUN npm run build
+
+# Verify the manifest was actually produced — fail fast if not
+RUN test -f /var/www/html/public/build/manifest.json \
+    || (echo "❌ Vite build failed: manifest.json missing" && exit 1)
+
+# -------------------------------------------------------
+# FIX: node_modules are only needed at build time.
+# Remove them to keep the final image smaller (~300MB saved).
+# -------------------------------------------------------
+RUN rm -rf node_modules
 
 # Create necessary directories and set permissions
 RUN mkdir -p /var/www/html/storage/framework/{sessions,views,cache} \

@@ -1,0 +1,26 @@
+# Dependencies — rebuilt inside Docker
+node_modules
+vendor
+
+# Local build output — rebuilt inside Docker via npm run build
+# DO NOT add public/build here — it must be built inside the image
+public/hot
+
+# Local environment files — never copy into image
+.env
+.env.*
+!.env.example
+
+# Git
+.git
+.gitignore
+
+# Logs
+storage/logs/*.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea
+.vscode
+*.swp
