@@ -29,7 +29,7 @@ RUN docker-php-ext-install \
     bcmath \
     gd \
     zip \
-    intl  # <-- ADD THIS LINE
+    intl
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
