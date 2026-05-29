@@ -20,6 +20,8 @@ until pg_isready -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" 2>/dev/null; do
     COUNT=$((COUNT+1))
     if [ $COUNT -ge $MAX_RETRIES ]; then
         echo "❌ Supabase connection failed after $MAX_RETRIES attempts"
+        echo "DB_HOST: $DB_HOST"
+        echo "DB_PORT: $DB_PORT"
         exit 1
     fi
     echo "⏳ Waiting for Supabase... ($COUNT/$MAX_RETRIES)"
@@ -59,10 +61,6 @@ LOG_CHANNEL=stderr
 SESSION_DRIVER=file
 CACHE_STORE=file
 QUEUE_CONNECTION=database
-
-# Force HTTPS in production
-URL_FORCE_HTTPS=true
-SESSION_SECURE_COOKIE=true
 EOF
 
 # Generate app key if not set
@@ -71,21 +69,19 @@ if ! grep -q "APP_KEY=base64:" /var/www/html/.env; then
     php artisan key:generate --force
 fi
 
-# Clear all caches
-echo "Clearing caches..."
-php artisan optimize:clear
-
 # Run migrations
 echo "Running migrations..."
 php artisan migrate --force
 
 # Create storage link
 echo "Creating storage link..."
-php artisan storage:link --force || true
+php artisan storage:link --force
 
-# Optimize for production
-echo "Optimizing application..."
-php artisan optimize
+# Clear and cache config
+echo "Caching configuration..."
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
 
 echo "Starting PHP-FPM..."
 php-fpm -D
