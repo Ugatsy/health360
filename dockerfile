@@ -13,13 +13,23 @@ RUN apt-get update && apt-get install -y \
     supervisor \
     cron \
     postgresql-client \
-    libpq-dev
+    libpq-dev \
+    libicu-dev  # Required for intl extension
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions (including PostgreSQL)
-RUN docker-php-ext-install pdo_pgsql pgsql mbstring exif pcntl bcmath gd zip
+# Install PHP extensions (ADDED: intl)
+RUN docker-php-ext-install \
+    pdo_pgsql \
+    pgsql \
+    mbstring \
+    exif \
+    pcntl \
+    bcmath \
+    gd \
+    zip \
+    intl  # <-- ADD THIS LINE
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
