@@ -20,6 +20,9 @@ until pg_isready -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" 2>/dev/null; do
     COUNT=$((COUNT+1))
     if [ $COUNT -ge $MAX_RETRIES ]; then
         echo "❌ Supabase connection failed after $MAX_RETRIES attempts"
+        echo "DB_HOST: $DB_HOST"
+        echo "DB_PORT: $DB_PORT"
+        echo "DB_USERNAME: $DB_USERNAME"
         exit 1
     fi
     echo "⏳ Waiting for Supabase... ($COUNT/$MAX_RETRIES)"
@@ -64,6 +67,12 @@ QUEUE_CONNECTION=database
 EOF
 fi
 
+# Generate app key if not set in .env
+if ! grep -q "APP_KEY=base64:" /var/www/html/.env; then
+    echo "Generating application key..."
+    php artisan key:generate --force
+fi
+
 # Run Laravel setup
 echo "Running migrations..."
 php artisan migrate --force
@@ -74,6 +83,14 @@ php artisan config:cache
 echo "Caching routes..."
 php artisan route:cache
 
-echo "Starting services..."
+echo "Caching views..."
+php artisan view:cache
+
+echo "Creating storage link..."
+php artisan storage:link --force
+
+echo "Starting PHP-FPM..."
 php-fpm -D
+
+echo "Starting Nginx..."
 nginx -g 'daemon off;'

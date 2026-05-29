@@ -14,12 +14,12 @@ RUN apt-get update && apt-get install -y \
     cron \
     postgresql-client \
     libpq-dev \
-    libicu-dev  # Required for intl extension
+    libicu-dev
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions (ADDED: intl)
+# Install PHP extensions
 RUN docker-php-ext-install \
     pdo_pgsql \
     pgsql \
